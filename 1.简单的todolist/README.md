@@ -1,11 +1,11 @@
 <!--
  * @Date: 2020-06-10 19:52:41
  * @LastEditors: zhangwen
- * @LastEditTime: 2020-06-10 19:58:22
+ * @LastEditTime: 2020-06-10 20:13:06
  * @FilePath: /vue-demos/1.简单的todolist/README.md
 --> 
 ## vue简单的todolist
-![项目截图](https://github.com/zhangwen0424/vue-demos/blob/master/images/todolist.png)
+![项目截图](https://raw.githubusercontent.com/zhangwen0424/vue-demos/master/images/todolist.png)
 
 用到的知识有：
 - v-for
