@@ -1,0 +1,125 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>todoList</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <h2>Vue - todoList</h2>
+
+      <!-- 添加事项 -->
+      <h4>
+        请输入事项
+        <input type="text" v-model="nextText" />
+        <button v-on:click="add">提交</button>
+      </h4>
+      <hr />
+
+      <!-- 进行事项 -->
+      <h4>正在进行</h4>
+      <ul>
+        <todo-item
+          v-for="(value, index) in todos"
+          v-bind:key="index"
+          v-bind:value="value"
+          v-bind:index="index"
+          v-bind:source="'todos'"
+          v-on:handle="handle"
+        ></todo-item>
+      </ul>
+      <hr />
+
+      <!-- 完成事项 -->
+      <h4>已经完成</h4>
+      <ul>
+        <todo-item
+          v-for="(value, index) in dones"
+          v-bind:key="index"
+          v-bind:value="value"
+          v-bind:index="index"
+          v-bind:source="'dones'"
+          v-on:handle="handle"
+        ></todo-item>
+      </ul>
+    </div>
+
+    <!-- 事项模版 -->
+    <script type="text/x-template" id="todo">
+      <li>
+        <button type="button" v-if="source=='todos'" v-on:click="handle('done', source, index)">完成事项</button>
+        <button type="button" v-else="" v-on:click="handle('recover',source, index)">恢复事项</button>
+        <p v-bind:class="source!='todos' ? 'line-through' : ''">{{value}}</p>
+        <button type="button" v-on:click="handle('remove', source, index)">彻底删除</button>
+      </li>
+    </script>
+  </body>
+  <script>
+    // 定义一个通用组件
+    var todo_item = Vue.component("todo-item", {
+      props: ["source", "value", "index"],
+      template: "#todo",
+      methods: {
+        handle: function (event, source, index) {
+          // 调用父组件方法： 1.子组件绑定事件中$emit（父组件事件名称） 2.父组件监听调用事件v-on:(父组件事件名称)="父组件menthods方法"
+          this.$emit("handle", event, source, index);
+        },
+      },
+    });
+
+    // 创建了vue实例
+    var vm = new Vue({
+      el: "#app",
+      data: {
+        nextText: "",
+        todos: ["target1", "target1"],
+        dones: ["target3", "target4"],
+      },
+      methods: {
+        handle: function (event, source, index) {
+          // 处理子组件调用到对应父组件方法
+          vm[event](index, source);
+        },
+        add: function () {
+          // 新增代办
+          vm.$data.todos.push(this.nextText);
+        },
+        done: function (index) {
+          // 完成代办
+          vm.$data.dones.push(vm.$data.todos[index]);
+          vm.$data.todos.splice(index, 1);
+        },
+        recover: function (index) {
+          // 恢复代办
+          vm.$data.todos.push(vm.$data.dones[index]);
+          vm.$data.dones.splice(index, 1);
+        },
+        remove: function (index, source) {
+          // 删除代办
+          vm.$data[source].splice(index, 1);
+        },
+      },
+    });
+  </script>
+  <style scoped>
+    h2 {
+      text-align: center;
+      padding: 10px 0px;
+      margin: 20px 0px;
+      width: 100%;
+      background: orange;
+    }
+    ul li {
+      list-style: none;
+    }
+    p {
+      display: inline-block;
+      width: 20%;
+    }
+
+    .line-through {
+      text-decoration: line-through;
+    }
+  </style>
+</html>
